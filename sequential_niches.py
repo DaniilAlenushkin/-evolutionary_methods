@@ -1,6 +1,5 @@
-import numpy as np
 import matplotlib.pyplot as plt
-
+import numpy as np
 
 def get_function_value(values: list):
     result = []
@@ -104,6 +103,7 @@ def get_final_graph(populations):
     for i in populations:
         dec_population, dec_population_value = get_value_by_bin(i)
         x_pop = list(map(lambda x: x * interval, dec_population))
+        print(x_pop[dec_population_value.index(max(dec_population_value))], max(dec_population_value))
         ax.scatter(x_pop, dec_population_value, s=10)
     ax.grid()
     ax.legend(('main function', '1 iteration',
@@ -120,14 +120,13 @@ if __name__ == '__main__':
     main_function = [np.sin(5 * np.pi * (i ** 0.75 - 0.05)) ** 6 for i in x_coordinate]
     stop_list = []
     for iteration in range(1, 6):
-        main_population = get_initial_generation(100, int(np.ceil(np.log2(10 ** accuracy))))
-        plotting_generation(main_population, x_coordinate, main_function)
-        for i in range(iteration*300):
+        main_population = get_initial_generation(200, int(np.ceil(np.log2(10 ** accuracy))))
+        for i in range(iteration*500):
             norm_vector = fitness_function(main_population)
             main_population = reproduction(norm_vector, main_population)
             main_population = crossing_over(main_population)
             main_population = mutation(main_population)
-            if i in [5, 10, 100, 300]:
+            if i in [0, int(iteration*500/2), int(iteration*500)-1]:
                 plotting_generation(main_population, x_coordinate, main_function)
         perfect_populations.append(main_population)
         main_function, stop_intervals = zeroing_the_peak(main_population, main_function)
