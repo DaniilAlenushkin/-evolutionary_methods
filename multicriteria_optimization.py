@@ -26,9 +26,11 @@ def get_initial_generation():
 
 def get_norm_vector(x_values, function):
     f_values = [function(i[0], i[1]) for i in x_values]
-    pre_norm_vector_by_f = [1  - (i/sum(f_values)) for i in f_values]
-    norm_vector_by_f = [(i/sum(pre_norm_vector_by_f)) for i in pre_norm_vector_by_f]
-    return norm_vector_by_f
+    all_negative = all(x < 0 for x in f_values)
+    epsilon = 1e-10
+    pre_norm_vector = list(map(abs, f_values)) if all_negative else [1 / (d+epsilon) for d in f_values]
+    norm_values = [i/sum(pre_norm_vector) for i in pre_norm_vector]
+    return norm_values
 
 def fitness(bin_population):
     x_values = list(map(get_x_value_by_bin, bin_population))
@@ -64,14 +66,14 @@ def crossing_over(bin_population):
             for gen_index in range(len(first_parent_indexes_gen)):
                 number_of_genes = np.random.randint(len(bin_population[0][0]))
                 direction = np.random.randint(2)
-                if direction:  # faces
+                if direction:  # from left to right
                     face_1 = bin_population[pair][first_parent_indexes_gen[gen_index]][:number_of_genes]
                     face_2 = bin_population[pair + 1][second_parent_indexes_gen[gen_index]][:number_of_genes]
                     bin_population[pair][first_parent_indexes_gen[gen_index]] = \
                         face_2 + bin_population[pair][first_parent_indexes_gen[gen_index]][number_of_genes:]
                     bin_population[pair + 1][second_parent_indexes_gen[gen_index]] = \
                         face_1 + bin_population[pair + 1][second_parent_indexes_gen[gen_index]][number_of_genes:]
-                else:  # back
+                else:  # from right to left
                     back_1 = bin_population[pair][first_parent_indexes_gen[gen_index]][
                              len(bin_population[pair][first_parent_indexes_gen[gen_index]]) - number_of_genes:]
                     back_2 = bin_population[pair + 1][second_parent_indexes_gen[gen_index]][
@@ -116,7 +118,7 @@ def plotting_generation(bin_population, title):
 if __name__ == '__main__':
     ACCURACY = 2
     POPULATION_SIZE = 1200
-    NUMBER_OF_GENERATIONS = 2000
+    NUMBER_OF_GENERATIONS = 300
     MUTATION_PROBABILITY  = 0.1
     CROSSING_OVER_PROBABILITY = 0.5
     FUNCTION_DEFINITION_LENGTH = 8 #[-4; 4]
