@@ -18,9 +18,9 @@ def get_initial_generation():
     result = []
     for _ in range(POPULATION_SIZE):
         sub_result = []
-        for _ in range(GENS_NUMBER):
+        for _ in range(CHROMOSOMES_NUMBER):
             sub_result.append(''.join(list(map(lambda x: str(x),
-                                               list(np.random.randint(2, size=CHROMOSOMES_NUMBER))))))
+                                               list(np.random.randint(2, size=GENS_NUMBER))))))
         result.append(sub_result)
     return result
 
@@ -122,9 +122,9 @@ if __name__ == '__main__':
     MUTATION_PROBABILITY  = 0.1
     CROSSING_OVER_PROBABILITY = 0.5
     FUNCTION_DEFINITION_LENGTH = 8 #[-4; 4]
-    GENS_NUMBER = 2
-    CHROMOSOMES_NUMBER = (int(np.ceil(np.log2(FUNCTION_DEFINITION_LENGTH * 10 ** ACCURACY))))
-    INTERVAL = 8/ 2 ** CHROMOSOMES_NUMBER
+    CHROMOSOMES_NUMBER = 2
+    GENS_NUMBER = (int(np.ceil(np.log2(FUNCTION_DEFINITION_LENGTH * 10 ** ACCURACY))))
+    INTERVAL = 8 / 2 ** GENS_NUMBER
     TITLES = ['First generation','Middle generation', 'Latest generation']
 
 
